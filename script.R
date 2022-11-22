@@ -2,6 +2,10 @@ parks<- read.csv("datasets/parks1.csv")
 View(parks)
 library(tidyverse)
 
+glimpse(parks) #shows all the columns, and their values
+head(parks) #shows the first few observations
+names(parks) #shows the names of the columns
+
 long<-parks2 %>% gather(species, abundance, c(2:21))
 View(long)
 long$site<-as.factor(long$site)

@@ -1,4 +1,4 @@
-parks<- read.csv("tutorial ideas/datasets/parks1.csv")
+parks<- read.csv("datasets/parks1.csv")
 View(parks)
 library(tidyverse)
 
@@ -20,9 +20,9 @@ library(tidyverse)
 View(parks)
 parks_tidy<- parks %>% gather(species, abundance, c(2:21)) %>% 
   #organizing into long format, where individual counts(value) is gathered by species (key)
-  na.omit() %>%
   #removing NA-s
-  mutate(abundance = parse_number(abundance)) 
+  mutate(abundance = parse_number(abundance)) %>% 
+  na.omit()
   #turning values in the abundance column into numeric - removing notes like "???" and "maybe more"
 
 View(parks_tidy)
@@ -76,3 +76,84 @@ relative<-parks_tidy %>%
   ungroup()
 
 View(relative)
+
+### Diversity ----
+
+#accounts for variation in the number of species, AND the way individuals within a community
+#are distributed among species.
+
+#Simpson's indexes
+#Describes evenness - how evenly are individuals distributed among the species that are present within a community?
+#Describes a community
+
+dominance<-parks_tidy %>% 
+  group_by(site) %>% 
+  mutate(total_individuals =sum(abundance)) %>% 
+  group_by(site,species) %>% 
+  summarise(simpsons_dominance = sum((abundance/total_individuals)^2) ) #NOT GOOD AT ALL
+
+View(richness)
+
+#calculating individual dominances
+
+figgate<-subset(parks_tidy, site=="Figgate")
+craigmillar<-subset(parks_tidy, site=="Craigmillar")
+meadows<- subset(parks_tidy, site=="Meadows")
+blackford<- subset(parks_tidy, site=="Blackford")
+
+(figgate_dominance = sum((figgate$abundance/sum(figgate$abundance))^2))
+(craigmillar_dominance = sum((craigmillar$abundance/sum(craigmillar$abundance))^2))
+(blackford_dominance = sum((blackford$abundance/sum(blackford$abundance))^2))
+(meadows_dominance = sum((meadows$abundance/sum(meadows$abundance))^2))
+
+
+#trying without intermediary object
+dominance<-parks_tidy %>% 
+  group_by(site) %>% 
+  summarise(simpsons_dominance = sum((abundance/sum(abundance))^2), 
+            sp_richness =length(unique(species)),
+            simpsons_diversity = (1-simpsons_dominance),
+            simpsons_reciprocal = (1/simpsons_dominance))
+
+#part 5 - SAD
+
+#To visualise evennes of sites, we can make a SAD diagram for each site.
+#SAD meaning species-abundance distribution 
+
+View(figgate)
+figgate$abundance<-as.factor(figgate$abundance)
+figgate$species<-as.factor(figgate$species)
+figgate_for_graph<-figgate %>% 
+  group_by(abundance) %>% 
+  summarise(frequency_of_abundance= (length(species)))
+
+str(figgate_for_graph)
+figgate_for_graph$frequency_of_abundance<- as.numeric(figgate_for_graph$frequency_of_abundance)
+
+(barplot(figgate_for_graph, aes(x=frequency_of_abundance))+geom_histogram())
+
+ggplot(figgate_for_graph, aes(x=abundance, y=frequency_of_abundance)) + geom_bar(stat="identity")
+# part 5 - rank abundance diagram
+
+#trying to do it for all of them:
+
+parks_frequency<- parks_tidy %>% 
+  mutate(abundance = as.factor(abundance)) %>% 
+  group_by(site, abundance) %>% 
+  summarise(frequency_of_abundance = length(species)) %>% 
+  ungroup()
+
+#Individual plots
+
+#trying without subsets
+(sad <- parks_frequency %>%                            
+    ggplot(aes(x = abundance, y=frequency_of_abundance)) +
+    geom_bar(stat="identity") +
+    facet_wrap(~ site, scale = 'free'))
+
+figgate_f<- subset(parks_frequency, site == "Figgate")
+craigmillar_f<- subset(parks_frequency, site == "Craigmillar")
+blackford_f<- subset(parks_frequency, site == "Blackford")
+meadows_f<-subset(parks_frequency, site == "Meadows")
+
+ggplot(figgate_for_graph, aes(x=abundance, y=frequency_of_abundance)) + geom_bar(stat="identity")

@@ -1,31 +1,27 @@
+# misc - hopefully ---- 
 parks<- read.csv("datasets/parks1.csv")
-View(parks)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
 
 parks<- parks2
-
 
 glimpse(parks) #shows all the columns, and their values
 head(parks) #shows the first few observations
 names(parks) #shows the names of the columns
 
-long
 
-long<-parks %>% gather(species, abundance, c(2:21))
-View(long)
-long$site<-as.factor(long$site)
-str(long)
-omits<-long %>% na.omit()
-View(omits)
-parks_long<-omits %>% mutate(abundance = parse_number(abundance))
-View(parks_long)
+#Part 1 - importing data& title----
 
+#Describing communities
+#Kinga Kaszap
+#23/11/2022
 
-#Part 1 - importing data----
+#Describing communities
+#Your Name
+#Date
+#Any other comments you want to add
+
 #Libraries ----
 library(tidyverse)
+library(ggthemes)
 
 #part 2 - data wrangling ----
 View(parks)
@@ -41,10 +37,8 @@ glimpse(parks_tidy)
 
 
 #part 3 - species richness----
-str(parks_tidy)
 
 #calculating richness for the parks
-parks_tidy$site<-as.factor(parks_tidy$site)
 
 (richness<- parks_tidy%>% 
   group_by(site) %>% 
@@ -54,7 +48,7 @@ View(richness)
 #visualising
 (barplot<- ggplot (richness, aes(x= site, y=sp_richness)) + geom_bar(stat="identity"))
 
-#rank- abundance curves----
+#rank- abundance curves FAILED ATTEMPT WITH VEGAN----
 
 library(vegan)
 library(BiodiversityR)
@@ -72,24 +66,8 @@ data(dune.env)
 data(dune)
 RankAbun.1 <- rankabundance(dune)
 
-#part 4 - diversity indeces----
 
-# Relative abundance of a given species
-#What is the relative abundance of each species in Figgate park?
-
-figgate_2<- figgate %>% 
-  mutate(rel.abundance.percent = (abundance/sum(abundance)*100)) #how to reduce decimals
-View(figgate_2)
-sum(figgate_2$rel.abundance.percent)
-
-relative<-parks_tidy %>% 
-  group_by(site) %>% 
-  mutate(rel.abund = (abundance/sum(abundance))) %>% 
-  ungroup()
-
-View(relative)
-
-### Diversity ----
+#part 4 - Diversity ----
 
 #accounts for variation in the number of species, AND the way individuals within a community
 #are distributed among species.
@@ -98,28 +76,13 @@ View(relative)
 #Describes evenness - how evenly are individuals distributed among the species that are present within a community?
 #Describes a community
 
-dominance<-parks_tidy %>% 
+#Simpson's dominance
+
+parks_tidy %>% 
   group_by(site) %>% 
-  mutate(total_individuals =sum(abundance)) %>% 
-  group_by(site,species) %>% 
-  summarise(simpsons_dominance = sum((abundance/total_individuals)^2) ) #NOT GOOD AT ALL
+  summarise(simpsons_dominance = sum((abundance/sum(abundance))^2))
 
-View(richness)
-
-#calculating individual dominances
-
-figgate<-subset(parks_tidy, site=="Figgate")
-craigmillar<-subset(parks_tidy, site=="Craigmillar")
-meadows<- subset(parks_tidy, site=="Meadows")
-blackford<- subset(parks_tidy, site=="Blackford")
-
-(figgate_dominance = sum((figgate$abundance/sum(figgate$abundance))^2))
-(craigmillar_dominance = sum((craigmillar$abundance/sum(craigmillar$abundance))^2))
-(blackford_dominance = sum((blackford$abundance/sum(blackford$abundance))^2))
-(meadows_dominance = sum((meadows$abundance/sum(meadows$abundance))^2))
-
-
-#trying without intermediary object
+#All indices in one table
 summary<-parks_tidy %>% 
   group_by(site) %>% 
   summarise(simpsons_dominance = sum((abundance/sum(abundance))^2), 
@@ -129,69 +92,55 @@ summary<-parks_tidy %>%
   ungroup()
 
 View(summary)
-parks_tidy %>% 
-  group_by(site) %>% 
-  summarise(simpsons_dominance = sum((abundance/sum(abundance))^2))
 
-#part 5 - SAD
+#part 5 - SAD ----
 
 #To visualise evennes of sites, we can make a SAD diagram for each site.
 #SAD meaning species-abundance distribution 
 
-View(figgate)
-figgate$abundance<-as.factor(figgate$abundance)
-figgate$species<-as.factor(figgate$species)
-figgate_for_graph<-figgate %>% 
-  group_by(abundance) %>% 
-  summarise(frequency_of_abundance= (length(species)))
-
-str(figgate_for_graph)
-figgate_for_graph$frequency_of_abundance<- as.numeric(figgate_for_graph$frequency_of_abundance)
-
-(barplot(figgate_for_graph, aes(x=frequency_of_abundance))+geom_histogram())
-
-ggplot(figgate_for_graph, aes(x=abundance, y=frequency_of_abundance)) + geom_bar(stat="identity")
-# part 5 - rank abundance diagram
-
-#trying to do it for all of them:
+#making new dataframe
 
 parks_frequency<- parks_tidy %>%
   group_by(site, abundance) %>% 
   summarise(frequency_of_abundance = length(species)) %>% 
   ungroup()
 
-parks_frequency_2<- parks_tidy %>% 
-  group_by(site, abundance) %>% 
-  summarise(frequency_of_abundance = length(species)) %>% 
-  ungroup()
-
 #Individual plots
 
-#trying without subsets
+#Plots
 (sad <- parks_frequency %>%                            
     ggplot(aes(x = abundance, y=frequency_of_abundance)) +
     geom_bar(stat="identity") +
     facet_wrap(~ site, scale="free"))
 
-
-figgate_f<- subset(parks_frequency, site == "Figgate")
-craigmillar_f<- subset(parks_frequency, site == "Craigmillar")
-blackford_f<- subset(parks_frequency, site == "Blackford")
-meadows_f<-subset(parks_frequency, site == "Meadows")
-
 #what is wrong with my graph now
 
-parks_f<- parks_tidy %>% 
-  group_by(site, abundance) %>% 
-  summarise(frequency_of_abundance = length(species)) %>% 
+### Trying to make rank abundance graphs for my parks ----
+
+View(parks_tidy)
+
+#We need: relative abundance (y axis) and Rank (x axis.)
+
+#We will make new columns for that.
+
+parks_rankabundance <- parks_tidy %>% 
+  group_by(site) %>% 
+  mutate(rel.abund = abundance/sum(abundance)*100,
+         rank= (rank(- abundance, ties.method="random"))) %>% 
   ungroup()
 
-#Individual plots
+(rank_abundance_plots<- parks_rankabundance %>% 
+  ggplot(aes(x=rank, y=rel.abund))+
+  geom_point(aes(color=species, fill= species))+
+  geom_line(colour="black")+
+  theme_bw()+
+  labs(x="Rank", y="Relative abundance (%)")+
+  theme(legend.position="none")+
+  facet_wrap(~site, scale="free"))
+  
+  
+  
 
-#trying without subsets
-(sad <- parks_f %>%                            
-    ggplot(aes(x = abundance, y=frequency_of_abundance)) +
-    geom_bar(stat="identity") +
-    facet_wrap(~ site, scale = 'free'))
+# Trying to import csv data
 
-ggplot(figgate_for_graph, aes(x=abundance, y=frequency_of_abundance)) + geom_bar(stat="identity")
+parks<- read.csv("datasets/parks1.csv")

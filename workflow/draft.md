@@ -5,6 +5,7 @@
 3.  Species richness
 4.  Species diversity
 5.  Basic visualisation - SAD diagrams
+6.  A bit more complex visualisation - Rank-Abundance diagrams
 
 This tutorial will introduce some basic methods of describing and comparing biological communities using R. It builds on some methods and concepts used in community ecology, but if you've never done community ecology before, that's also fine! The concepts used are relatively simple, and will be explained in detail in the tutorial. The tutorial is aimed at beginners, but expects you to have downloaded RStudio and are somewhat familiar with its layout. If you are completely new to RStudio, check out this tutorial! (Insert coding club reference)
 
@@ -36,13 +37,25 @@ In ecology, there is usually a big difference between the format observations ar
 
 -   First, open RStudio,
 
--   set up working directory
+    Open RStudio, and click on `File/New File/R Script`.
 
--   import data (CSV? Excel?)
+-   Introduce your script
+
+    It is good practice to "introduce your code" - so that anyone who may look at it knows immediately whose work it is, when was it created, and what purpose. It is also useful if you ever want to look back on your work, or find a specific script.
+
+    ```{r}
+    #Describing communities - feel free to change the title of your script!
+    #Your Name
+    #Date
+    #Any other comments you want to add
+
+    ```
+
+-   set up working directory
 
 Loading libraries
 
-Before we start working with our data, we need to load the libraries we will be using throughout the script.
+Before we start working with our data, we need to load any libraries we will be using throughout the script. We actually only need one.
 
 ```{r}
 library (tidyverse) # contains packages dplyr for efficient data manipulation,
@@ -51,7 +64,7 @@ library (tidyverse) # contains packages dplyr for efficient data manipulation,
 #and more...
 ```
 
--If you don't have these packages, run
+-If you don't have `tidyverse` installed on your computer, run
 
 ```{r}
 install.packages (tidyverse)
@@ -75,7 +88,7 @@ head(parks)
 names(parks)
 ```
 
-Now we have a feel of our data. The `glimpse` function tells us we have 4 rows (one row for each site), and 21 columns. We can also see that the column names 2-21 are the bird species we observed (one for each species), and the columns themselves contain the abundance of said birds in each park, if they were present, plus field notes ( like "`5(could be morhen)`"). R also tells us the what type of data it thinks each column is - we can see that some of our columns contain character (\<chr\>), while others integer (\<int\>) variables.
+Now we have a feel of our data. The `glimpse` function tells us we have 4 rows (one row for each site), and 21 columns. We can also see that the column names 2-21 are the bird species we observed (one for each species), and the columns themselves contain the abundance of said birds in each park, if they were present, plus field notes ( like "`5(could be morhen)`"). `R` also tells us the what type of data it thinks each column is - we can see that some of our columns contain character (`<chr>`), while others integer (`<int>`) variables.
 
 Overall, the data looks quite messy - and wide. (21 columns is a lot for such a small dataset).
 

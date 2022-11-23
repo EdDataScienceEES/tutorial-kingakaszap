@@ -109,9 +109,11 @@ parks_frequency<- parks_tidy %>%
 
 #Plots
 (sad <- parks_frequency %>%                            
-    ggplot(aes(x = abundance, y=frequency_of_abundance)) +
+    ggplot(aes(x = abundance, y=frequency_of_abundance, fill=site)) +
     geom_bar(stat="identity") +
-    facet_wrap(~ site, scale="free"))
+    theme_tufte()+
+    facet_wrap(~ site, scale="free")+
+    labs(legen))
 
 #what is wrong with my graph now
 
@@ -143,4 +145,6 @@ parks_rankabundance <- parks_tidy %>%
 
 # Trying to import csv data
 
-parks<- read.csv("datasets/parks1.csv")
+parks<- read.csv("datasets/parks4.csv")
+
+write.csv(parks2,file= "datasets/parks4.csv")

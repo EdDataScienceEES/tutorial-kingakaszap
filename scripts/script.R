@@ -1,12 +1,19 @@
 parks<- read.csv("datasets/parks1.csv")
 View(parks)
-library(tidyverse)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+
+parks<- parks2
+
 
 glimpse(parks) #shows all the columns, and their values
 head(parks) #shows the first few observations
 names(parks) #shows the names of the columns
 
-long<-parks2 %>% gather(species, abundance, c(2:21))
+long
+
+long<-parks %>% gather(species, abundance, c(2:21))
 View(long)
 long$site<-as.factor(long$site)
 str(long)
@@ -30,6 +37,7 @@ parks_tidy<- parks %>% gather(species, abundance, c(2:21)) %>%
   #turning values in the abundance column into numeric - removing notes like "???" and "maybe more"
 
 View(parks_tidy)
+glimpse(parks_tidy)
 
 
 #part 3 - species richness----
@@ -38,9 +46,9 @@ str(parks_tidy)
 #calculating richness for the parks
 parks_tidy$site<-as.factor(parks_tidy$site)
 
-richness<- parks_tidy%>% 
+(richness<- parks_tidy%>% 
   group_by(site) %>% 
-  summarise(sp_richness =length(unique(species)))
+  summarise(sp_richness =length(unique(species))))
 View(richness)
 
 #visualising
@@ -112,12 +120,18 @@ blackford<- subset(parks_tidy, site=="Blackford")
 
 
 #trying without intermediary object
-dominance<-parks_tidy %>% 
+summary<-parks_tidy %>% 
   group_by(site) %>% 
   summarise(simpsons_dominance = sum((abundance/sum(abundance))^2), 
             sp_richness =length(unique(species)),
             simpsons_diversity = (1-simpsons_dominance),
-            simpsons_reciprocal = (1/simpsons_dominance))
+            simpsons_reciprocal = (1/simpsons_dominance)) %>% 
+  ungroup()
+
+View(summary)
+parks_tidy %>% 
+  group_by(site) %>% 
+  summarise(simpsons_dominance = sum((abundance/sum(abundance))^2))
 
 #part 5 - SAD
 
@@ -141,8 +155,12 @@ ggplot(figgate_for_graph, aes(x=abundance, y=frequency_of_abundance)) + geom_bar
 
 #trying to do it for all of them:
 
-parks_frequency<- parks_tidy %>% 
-  mutate(abundance = as.factor(abundance)) %>% 
+parks_frequency<- parks_tidy %>%
+  group_by(site, abundance) %>% 
+  summarise(frequency_of_abundance = length(species)) %>% 
+  ungroup()
+
+parks_frequency_2<- parks_tidy %>% 
   group_by(site, abundance) %>% 
   summarise(frequency_of_abundance = length(species)) %>% 
   ungroup()
@@ -153,11 +171,27 @@ parks_frequency<- parks_tidy %>%
 (sad <- parks_frequency %>%                            
     ggplot(aes(x = abundance, y=frequency_of_abundance)) +
     geom_bar(stat="identity") +
-    facet_wrap(~ site, scale = 'free'))
+    facet_wrap(~ site, scale="free"))
+
 
 figgate_f<- subset(parks_frequency, site == "Figgate")
 craigmillar_f<- subset(parks_frequency, site == "Craigmillar")
 blackford_f<- subset(parks_frequency, site == "Blackford")
 meadows_f<-subset(parks_frequency, site == "Meadows")
+
+#what is wrong with my graph now
+
+parks_f<- parks_tidy %>% 
+  group_by(site, abundance) %>% 
+  summarise(frequency_of_abundance = length(species)) %>% 
+  ungroup()
+
+#Individual plots
+
+#trying without subsets
+(sad <- parks_f %>%                            
+    ggplot(aes(x = abundance, y=frequency_of_abundance)) +
+    geom_bar(stat="identity") +
+    facet_wrap(~ site, scale = 'free'))
 
 ggplot(figgate_for_graph, aes(x=abundance, y=frequency_of_abundance)) + geom_bar(stat="identity")

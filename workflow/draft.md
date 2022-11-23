@@ -198,3 +198,51 @@ summary<-parks_tidy %>%
 ungroup()
 # removing groupings
 ```
+
+By looking at the summary table, we can see that it would have been wrong to only report species richness - Despite the fact that they accomodate the same number of species, Blackford Hill has a higher diversity index by *insert number* than the Meadows! Similary, despite both Figgate and Craigmillar having a species richness of 17, Figgate park is more diverse. Since these differences are not to do with richness, they must be a result of *evenness* - whether a few species are dominant, or whether abundance is relatively evenly distributed.
+
+# Let's visualise - SAD diagrams
+
+Based on the summary table, we concluded that despite there being only two values of species richness, the parks still differ in diversity. We hypothesized that this is due to differences in evenness.
+
+It might be a good idea to try and visualise evenness. We will do this by making a simple SAD diagram for each park. Don't let the name fool you - SAD here stands for Species Abundance Distribution, and NOT how working in RStudio makes you feel. (Not at all. RStudio is always a happy, comforting place.) \*insert error message abt divergent transitions. Well, maybe *almost* always.
+
+SAD models describe the distribution of population densities of the species present in a community. They display the number of species that are represented by 1,2,...n individuals in the community. For scientific purposes, this plot should be used only when the community is large and contains many species - clearly not true for our samples. However, for the purpose of this tutorial, it is perfectly fine to illustrate our data with a SAD diagram.
+
+On graphs, SAD-s usually have abundance "classes" (how many individuals of a given species are present), and on the y axis, we have the frequency of each abundance class. The x axis usually has a log-scale. For the purpose of our "study", we won't do any log-transforms - as we are working with a small sample size. For more complex analyses, you would need to take this step.
+
+*insert how sad diagrams usually look like*
+
+For making a SAD diagram for each of our parks, we will first make a new dataset:one containing the *frequency of each abundance value WITHIN a site.* (For example, how many species in Figgate Park have an abundance of 10 individuals?)
+
+For this, we make a new dataframe called parks_frequency.
+
+```{r}
+parks_frequency<- parks_tidy %>% 
+  #making a new dataframe by passing parks_tidy through a pipe
+  group_by(site, abundance) %>% 
+  #we need to group by site, and WITHIN site, we need to group by abundance.
+  summarise(frequency_of_abundance = length(species)) %>% 
+  #making a new column for how often each abundance value occurs within each park
+  ungroup()
+  #removing groupings
+```
+
+For larger datasets, you would use abundance classes - add something??
+
+With `length(species)`, we ask R to simply count the number of observations in the `species` column. The important part to note is that we already grouped the data into `site`, and within that grouping, to `abundance` - so R will count the number of `species` corresponding each abundance value within each site.
+
+Great! We now have a new dataframe, based on which we will make our SAD graphs.
+
+```{r}
+(sad <- parks_frequency %>%  
+    #calling our plot "sad" and making it by passing the dataset down a pipe
+    ggplot(aes(x = abundance, y=frequency_of_abundance)) +
+    #defining x and y axes
+    geom_bar(stat="identity") +
+    #telling R that we want a bar graph
+    facet_wrap(~ site, scale = 'free'))
+    #making a separate plot for each site, and allowing the x axis to vary for the    individual plots
+
+
+```

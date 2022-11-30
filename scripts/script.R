@@ -45,6 +45,11 @@ glimpse(parks_tidy)
  )
 View(richness)
 
+parks_tidy%>% 
+    group_by(site) %>% 
+    summarise(sp.richness =length(unique(species)))
+
+
 #visualising
 (barplot_richness<- ggplot (richness, aes(x= site, y=sp.richness, fill=site)) +
     #setting the x and y axes, and asking R to give different colors to the sites
@@ -64,7 +69,7 @@ View(richness)
      axis.text.x = element_text(angle=45, hjust=1)))
     #tilting the text of the x axis
 
-ggsave(barplot_richness, file="background/barplot_richness.png", width= 6, height=6)
+ggsave(barplot_richness, file="plots/barplot_richness.png", width= 6, height=6)
 #save our plot - don't forget to enter your own filepath!
 
 
@@ -111,7 +116,7 @@ parks_tidy<-parks_tidy %>%
 #Simpson's dominance
 parks_tidy %>% 
   group_by(site) %>% 
-  summarise(simpsons.dom =sum(relative.abundance^2)) %>% 
+  summarise(simpsons.dominance =sum(relative.abundance^2)) %>% 
   ungroup()
 
 parks_tidy %>% 
@@ -122,7 +127,7 @@ parks_tidy %>%
 #shannons index
 parks_tidy %>% 
   group_by(site) %>% 
-  summarise(shannons.div = -sum(relative.abundance*log(relative.abundance))) %>% 
+  summarise(shannons.diversity = -sum(relative.abundance*log(relative.abundance))) %>% 
   ungroup()
 
 
@@ -141,12 +146,12 @@ View(summary)
 #new indices in one table
 
 
-summary<- parks_tidy %>% 
+(summary<- parks_tidy %>% 
   group_by(site) %>% 
   summarise(sp.richness = length(unique(species)),
             shannons.diversity = -sum(relative.abundance*log(relative.abundance)),
             simpsons.dominance = sum(relative.abundance^2)) %>% 
-  ungroup()
+  ungroup())
 
 View(summary)
 
@@ -182,7 +187,24 @@ labs(x= "\nNumber of individuals", y= "Number of species\n")+
         axis.title = element_text(size = 16)))
         #increasing font size
 
-ggsave(sad, file="background/sad.png", width= 6, height=6)
+ggsave(sad, file="plots/sad.png", width= 6, height=6)
+
+(sad <- parks_frequency %>%                            
+    ggplot(aes(x = abundance, y=frequency.of.abundance, fill=site)) +
+    geom_bar(stat="identity") +
+    theme_tufte()+
+    facet_wrap(~ site)+
+    labs(x= "\nNumber of individuals", y= "Number of species\n")+
+    #giving informative names to the axes
+    theme_few()+
+    #adding a theme from ggthemes - feel free to add a different one!
+    scale_fill_brewer(palette = "Accent")+ 
+    #adding a color palette - feel free to add a different one!
+    theme(legend.position = "none",
+          #removing the legend as the axes provide enough information 
+          axis.text = element_text(size = 12), 
+          axis.title = element_text(size = 16)))
+#increasing font size
 
        
 
@@ -217,7 +239,7 @@ parks_rankabundance <- parks_tidy %>%
   theme(legend.position = "none"))
   #removing the legend as the axes provide enough information 
 
-ggsave(rank_abundance_plots, file="background/rank_abundance.png", width= 6, height=6)  
+ggsave(rank_abundance_plots, file="plots/rank_abundance.png", width= 6, height=6)  
   
 (rank_abundance_plots_2<- parks_rankabundance %>% 
     ggplot(aes(x=rank, y=rel.abund.percent))+
@@ -234,10 +256,5 @@ ggsave(rank_abundance_plots, file="background/rank_abundance.png", width= 6, hei
     theme(legend.position = "none"))
 #removing the legend as the axes provide enough information 
 
-ggsave(rank_abundance_plots_2, file="background/rankabundance2.png", width=6, height=6)
+ggsave(rank_abundance_plots_2, file="plots/rankabundance2.png", width=6, height=6)
 
-# Trying to import csv data
-
-parks<- read.csv("datasets/parks4.csv")
-
-write.csv(parks2,file= "datasets/parks4.csv")

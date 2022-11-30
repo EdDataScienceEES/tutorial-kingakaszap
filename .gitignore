@@ -16,7 +16,10 @@
 
 # RStudio files
 .Rproj.user/
-tutorial-kingakaszap.Rproj
+
+# my own RStudio file
+.Rproj.user/
+tutorial-kingakaszap.RProj
 
 # produced vignettes
 vignettes/*.html

@@ -358,4 +358,76 @@ This is how our plot looks like:
 Interesting. Definitely not the best plot - what are those gaps doing in the Meadows and Craigmillar? Also, why is Figgate just one big block?
 Worry not - this all has to do with oversimplification, and the `scale = free` command. In real life, log-transformation and abundance classes instead of discrete numbers are used so that there are no "empty gaps" like in our Meadows and Blackford plots. And using a uniform scale would get rid of the "block" that currently represents Figgate park. But we will not bother with that - there are still many inferences we can make from our graph. 
 
+Let's save it first: 
+
+```r
+ggsave(sad, file =" background/sad.png", width = 6, height = 6)
+# save our plot - don't forget to enter your own filepath!
+```
+
 These plots represent *evenness* - and intuitively, based on the bars, we can tell that Figgate is *very even* - that is, there are only 4 abundance classes present, and an equal number of species belong to each - it is the equal height of the bars that make that plot look like a block. How unlikely! Maybe, just maybe this surprising evenness has to do with the fact that we are working with a fake dataset? Who knows. Anyway, the differences shown by our indices in the previous part are now also more apparent - there is certainly a big difference between the SAD graph for Figgate and Craigmillar, and those for Meadows and Blackford. Figgate and Blackford have a relatively even species composition, whereas the other two look very uneven - most species have only one individual present, and there  one species dominates - by having an abundance of 30 individuals in Craigmillar and 10 in the Meadows.
+
+Still, there might be a better way to visualise evenness. That brings us to the last section of this tutorial - Rank-Abundance plots.
+
+# A bit more complex visualisation - Rank-Abundance diagrams
+
+Let's have a look at how we can plot the same data a different way! A common way to do this is creating Rank-Abundance diagrams. These are similar to SAD graphs as they visualise evenness and commonness/rarity. pecies are assigned a **rank** based on abundance, with most abundant ranked 1 and least abundant S (where S is the number of species in the community). Like our diversity indices, rank-abundance requires a knowledge of the **relative abundance** of each species. We then plot relative abundance against rank to visualise the community. This way, we will get rid of the annoying gaps present in the previous graphs, and are able to visualise richness within our graphs. 
+
+Since this is a general tutorial, and it is already getting too long, we will only include the very basics of rank-abundance diagrams. However, if you want to know more about them, and how to make them prettier, or starting from scratch, check out [this](dara) tutorial.
+
+To make the plots, we will first make a new dataframe containing columns for a) relative abundance in percentages and b) ranks assigned to each species. As with everything before, we want to retrieve these values separately for each parks, as we want to compare between them.
+
+```r
+parks_rankabundance <- parks_tidy %>% 
+# making new dataframe for rank abundance plots
+  group_by (site) %>% 
+  mutate(rel.abund.percent = relative.abundance * 100,
+  # adding new column for % relative abundance  
+         rank = (rank(- abundance, ties.method="random"))) %>% 
+         # new columnn for rank  
+  ungroup()
+  # remove groupings
+  
+```
+Above, we used `mutate` to make new columns. Within the `mutate` command, we used `rank` and `-` to rank abundances in descending order. As each species should have a unique rank for our plots, we used `tied.method="random" to assign a rank at random between species with equal number of individuals.
+
+You might remember that before, we did not make a new dataframe when we added a column. However, we will now to keep things interesting, and to keep the original dataframe concise - as rank is not really a relevant metric for any other purpose than making these plots, whereas the relative abundance column we added when we overwrote the tidy dataframe was used continuously throughout the tutorial.
+
+Now, let's make our plots!
+
+```r
+(rank_abundance_plots <- parks_rankabundance %>% 
+  ggplot (aes (x = rank, y = rel.abund.percent)) +
+  # specifying the x and y axes
+  geom_point (aes (color = species, fill = species), size = 2) +
+  # specifying that we want a scatter plot
+  geom_line (colour= "black") +
+  # adding a line connecting the points
+  labs (x = "\nRank", y = "Relative abundance (%)\n") +
+  facet_wrap (~site, scale = "free") +
+  # making separate plots for sites, allowing scales of axes to vary
+  theme_few() +
+  # adding a theme from ggthemes - feel free to add a different one!
+  theme (legend.position = "none"))
+  # removing the legend as the axes provide enough information
+```
+<img width="400" height= "400" alt="image" src="https://user-images.githubusercontent.com/114161055/204849468-2fe83e9a-2961-4b92-8d98-1701577a25c4.png">
+
+```r
+ggsave(rank_abundance_plots, file="background/rank_abundance.png", width= 6, height=6) 
+```
+
+<img width="400" height = "400" alt="image" src="https://user-images.githubusercontent.com/114161055/204849861-d2b24d6f-2046-4a6a-bba4-ea4ee45babcb.png">
+
+```r
+(rank_abundance_plots2 <- parks_rankabundance %>% 
+  ggplot (aes (x = rank, y = rel.abund.percent)) +
+  geom_point (aes (color = species, fill = species), size = 2) +
+  geom_line (colour= "black") +
+  labs (x = "\nRank", y = "Relative abundance (%)\n") +
+  facet_wrap (~site, scale = "free") +
+  theme_few() +
+  theme (legend.position = "none"))
+```
+
+

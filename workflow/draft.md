@@ -2,7 +2,7 @@
 
 # Tutorial Steps
 
-1.  Setting the secene/introduction to community ecology
+1.  Setting the scene/introduction to community ecology
 
 2.  Importing and tidying field data
 

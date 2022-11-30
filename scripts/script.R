@@ -1,11 +1,3 @@
-# misc - hopefully ---- 
-parks<- read.csv("datasets/parks1.csv")
-
-parks<- parks2
-
-glimpse(parks) #shows all the columns, and their values
-head(parks) #shows the first few observations
-names(parks) #shows the names of the columns
 
 
 #Part 1 - importing data& title----
@@ -28,13 +20,16 @@ library(ggthemes)
 #part 2 - data wrangling ----
 View(parks)
 
+glimpse(parks) #shows all the columns, and their values
+head(parks) #shows the first few observations
+names(parks) #shows the names of the columns
+
 parks_tidy<- parks %>% gather(species, abundance, c(2:21)) %>% 
   #organizing into long format, where counts of individuals (value) are assigned to species (key)
   mutate(abundance = parse_number(abundance)) %>% 
   #removing non-numeric parts (notes) from values in the abundance column
   na.omit()
   #removing NA-s
-
 
 View (parks_tidy)
 glimpse(parks_tidy)
@@ -121,7 +116,7 @@ parks_tidy %>%
 
 parks_tidy %>% 
   group_by(site) %>% 
-  summarise(simpsons_dominance = sum((abundance/sum(abundance))^2)) %>% 
+  summarise(simpsons.dominance = sum((abundance/sum(abundance))^2)) %>% 
   ungroup ()
 
 #shannons index
@@ -135,8 +130,8 @@ parks_tidy %>%
 summary<-parks_tidy %>% 
   group_by(site) %>% 
   summarise(simpsons_dominance = sum((abundance/sum(abundance))^2), 
-            sp_richness =length(unique(species)),
-            simpsons_diversity = (1-simpsons_dominance),
+            sp.richness =length(unique(species)),
+            simpsons.diversity = (1-simpsons_dominance),
             simpsons_reciprocal = (1/simpsons_dominance),
             shannons_div = -(sum((abundance/sum(abundance))*log(sum((abundance/sum(abundance))))))) %>% 
   ungroup()
@@ -153,6 +148,8 @@ summary<- parks_tidy %>%
             simpsons.dominance = sum(relative.abundance^2)) %>% 
   ungroup()
 
+View(summary)
+
 #part 5 - SAD ----
 
 #To visualise evennes of sites, we can make a SAD diagram for each site.
@@ -162,14 +159,14 @@ summary<- parks_tidy %>%
 
 parks_frequency<- parks_tidy %>%
   group_by(site, abundance) %>% 
-  summarise(frequency_of_abundance = length(species)) %>% 
+  summarise(frequency.of.abundance = length(species)) %>% 
   ungroup()
 
 #Individual plots
 
 #Plots
 (sad <- parks_frequency %>%                            
-    ggplot(aes(x = abundance, y=frequency_of_abundance, fill=site)) +
+    ggplot(aes(x = abundance, y=frequency.of.abundance, fill=site)) +
     geom_bar(stat="identity") +
     theme_tufte()+
     facet_wrap(~ site, scale="free")+
@@ -184,6 +181,9 @@ labs(x= "\nNumber of individuals", y= "Number of species\n")+
         axis.text = element_text(size = 12), 
         axis.title = element_text(size = 16)))
         #increasing font size
+
+ggsave(sad, file="background/sad.png", width= 6, height=6)
+
        
 
 #what is wrong with my graph now
@@ -217,9 +217,24 @@ parks_rankabundance <- parks_tidy %>%
   theme(legend.position = "none"))
   #removing the legend as the axes provide enough information 
 
+ggsave(rank_abundance_plots, file="background/rank_abundance.png", width= 6, height=6)  
   
-  
-  
+(rank_abundance_plots_2<- parks_rankabundance %>% 
+    ggplot(aes(x=rank, y=rel.abund.percent))+
+    #specifying the x and y axes
+    geom_point(aes(color=species, fill= species), size=2)+
+    #increasing default point size
+    geom_line(colour="black")+
+    #adding a line connecting the points
+    labs(x="\nRank", y="Relative abundance (%)\n")+
+    facet_wrap(~site)+
+    #making separate plots for sites, allowing scales of axes to vary
+    theme_few()+
+    #adding a theme from ggthemes - feel free to add a different one!
+    theme(legend.position = "none"))
+#removing the legend as the axes provide enough information 
+
+ggsave(rank_abundance_plots_2, file="background/rankabundance2.png", width=6, height=6)
 
 # Trying to import csv data
 

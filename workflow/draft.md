@@ -1,11 +1,18 @@
 # Tutorial Aims:
 
-1.  Introduction to community ecology
+
+# Tutorial Steps
+1.  Setting the secene/introduction to community ecology
 2.  Importing and tidying field data
 3.  Species richness
-4.  Species diversity
-5.  Basic visualisation - SAD diagrams
-6.  A bit more complex visualisation - Rank-Abundance diagrams
+- calculating richness
+-  visualising species richness
+5.  Calculating diversity indices
+-  Simpson's dominance
+-  Shannon-Wiener diversity index
+-  Making a summary table
+6.  Basic visualisation - SAD diagrams
+7.  A bit more complex visualisation - Rank-Abundance diagrams
 
 This tutorial will introduce some basic methods of describing and comparing biological communities using R. It builds on some methods and concepts used in community ecology, but if you've never done community ecology before, that's also fine! The concepts used are relatively simple, and will be explained in detail in the tutorial. The tutorial is aimed at beginners, but expects you to have downloaded RStudio and are somewhat familiar with its layout. If you are completely new to RStudio, check out this tutorial! (Insert coding club reference)
 

@@ -201,7 +201,7 @@ ggsave(barplot_richness, file="background/barplot_richness.png", width= 6, heigh
 
 We can intuitively tell these values don't tell us too much - for example, what species were there? How much did the species composition overlap?
 
-Could we use this number to compare the parks? Based on these values, we might say "Blackford Hill and the Meadows were less diverse, whereas Craigmillar and Figgate had more species, so they were more diverse". This, however, would be WRONG - since diversity as an ecological concept not only includes the number of species present at a given site, but also incorporates *how evenly the total abundance is distributed among these species.* We can say "we found 17 unique species in Figgate and Craigmillar, and 7 in the Meadows and Blackford" , **describing** each **individual site**- but species richness on its on is generally **not** the best way to make **comparisons between sites.** We should also be careful with saying " Craigmillar Park and Figgate Park have similar community composition because both have a species richness of 17 ". Despite having identical species richness, the way communities are assembled may still be very different among sites.  
+Could we use this number to compare the parks? Based on these values, we might say "Blackford Hill and the Meadows were less diverse, whereas Craigmillar and Figgate had more species, so they were more diverse". This, however, would be WRONG - since diversity as an ecological concept not only includes the number of species present at a given site, but also incorporates *how evenly the total abundance is distributed among these species.* We can say "we found 20 unique species in Figgate and Craigmillar, and 7 in the Meadows and Blackford" , **describing** each **individual site**- but species richness on its on is generally **not** the best way to make **comparisons between sites.** We should also be careful with saying " Craigmillar Park and Figgate Park have similar community composition because both have a species richness of 17 ". Despite having identical species richness, the way communities are assembled may still be very different among sites.  
 
 This brings us to our next concept: **Diversity** .
 
@@ -213,7 +213,18 @@ Simpson's dominance focuses on common species, and as the name suggests, it's mo
 
 The *Shannon-Wiener diversity index* or *Shannon's diversity* tells us about rare species. It is less sensitive to sample size than Simpson's reciprocal, and it is the most popular index to determine diversity. 
 
-Something all diversity indeces have in common is that they work with *relative abundance*. This value is specific to each species, and indicates how common or rare a given species relative to others. It is calculated as the number of individuals belonging to a given species divided by the number of all individuals present in the area. Relative abundances in a community should add up to 1.
+Something all diversity indeces have in common is that they work with *relative abundance*. This value is specific to each species, and indicates how common or rare a given species relative to others. It is calculated as the number of individuals belonging to a given species divided by the number of all individuals present in the area. Relative abundances in a community should add up to 1. 
+
+Based on relative abundance, Simpson's dominance is given by the following formula: 
+
+<img width="200" height="100" alt="image" src="https://user-images.githubusercontent.com/114161055/204814382-a2e97f90-de4e-4c7b-b385-f15df2d2a9a7.png">
+
+where (Pi) stands for relative abundance. 
+
+Also using relative abundance, Shannon's diversity is determined as
+
+<img width="200" height ="90" alt="image" src="https://user-images.githubusercontent.com/114161055/204815826-0d2819ee-7af1-42ac-a0fe-ff2f29970dbd.png">
+
 
 We will first add a new column to our existing `parks_tidy` dataframe for relative abundance of each species within the four parks. 
 
@@ -227,70 +238,79 @@ parks_tidy <- parks_tidy %>%
   ungroup()
   # removing groupings
 ```
-Note that **we usually don't overwrite the dataframe when we change things in it, we rather make a new dataframe and keep the previous one**. However, in this instance that would be redundant as we are not altering or removing any columns, only adding a new column based on existing ones. So here, we can overwrite the dataframe, by passing our old object down a pipe, and assigning the new object the same name as the old one.
+Note that **it's usually bad practice to overwrite the dataframe when we change things in it, and it's recommended that you make a new dataframe and keep the previous one**. However, in this instance that would be redundant as we are not altering or removing any columns, only adding a new column based on existing ones. So here, we can overwrite the dataframe, by passing our old object down a pipe, and assigning the new object the same name as the old one.
 
 Let's calculate dominance first:
 
-```{r}
+```r
 parks_tidy %>% 
   group_by(site) %>% 
-  summarise(simpsons_dominance = sum((abundance/sum(abundance))^2))
+  summarise(simpsons.dominance = sum(relative.abundance^2)) %>% 
+  ungroup()
 ```
-
-now, the last line of code may be a bit confusing - let's go through it step by step.
-
-We want to know the value of *insert pic of simpsons dominance* for each park - so we grouped the data by site. The abundance values we use the third line therefore all correspond to abundance values *within* a site. With `sum((abundance/sum(abundance))^2)`, we are asking R to divide the *abundance of each species present in a park* by *the total number of individuals observed in that park*, then *square that value*, and finally add all these values for all species together. Hence the repeating of `sum` and `abundance`.
 
 This should yield the output
 
-```{r}
-# A tibble: 4 × 2
-  site        simpsons_dominance
-  <chr>                    <dbl>
-1 Blackford               0.144 
-2 Craigmillar             0.217 
-3 Figgate                 0.0638
-4 Meadows                 0.456 
+<img width="230" alt="image" src="https://user-images.githubusercontent.com/114161055/204817971-fb60be6a-374e-4753-a1de-662b99ff6c6f.png">
+
+Now let's calculate Shannon's diversity:
+
+```r
+parks_tidy %>% 
+  group_by(site) %>% 
+  summarise(shannons.div = -sum(relative.abundance*log(relative.abundance))) %>%
+  ungroup()
 ```
 
-Great! Now let's make a summary table which includes all the indices we have introduced: species richness, Simpson's dominance, Simpson's diversity and Simpson's reciprocal diversity.
+<img width="220" alt="image" src="https://user-images.githubusercontent.com/114161055/204818496-bd0b29af-4496-4ff9-becf-b0e842cae8d2.png">
 
+for which you should get
+
+<img width="402" alt="image" src="https://user-images.githubusercontent.com/114161055/204819645-a9e6f231-03c1-4522-aa5b-2d4d41264579.png">
+
+Great! Now let's make a summary table which includes all the indices we have introduced: species richness, Simpson's dominance and Shannon's diversity.
 We can, of course, do this within one pipe:
 
-```{r}
-summary<-parks_tidy %>% 
-  #calling our new dataframe "summary"
+```r
+summary<- parks_tidy %>% 
+#calling the new dataframe "summary"
   group_by(site) %>% 
-  # telling R we want all the values for each park separately
-  summarise(sp_richness =length(unique(species)),
-            #calculating species richness
-            simpsons_dominance = sum((abundance/sum(abundance))^2), 
-            # calculating dominance
-            simpsons_diversity = (1-simpsons_dominance),
-            #calculating diversity
-            simpsons_reciprocal = (1/simpsons_dominance)) %>% 
-            #calculating reciprocal index
-ungroup()
-# removing groupings
+  # grouping the data into parks
+  summarise(sp.richness = length(unique(species)),
+            shannons.diversity = -sum(relative.abundance*log(relative.abundance)),
+            simpsons.dominance = sum(relative.abundance^2)) %>% 
+  # calculating all indices
+  ungroup()
+  # removing groupings
+
+View(summary)
+# having a look at our summary table
 ```
 
-By looking at the summary table, we can see that it would have been wrong to only report species richness - Despite the fact that they accomodate the same number of species, Blackford Hill has a higher diversity index by *insert number* than the Meadows! Similary, despite both Figgate and Craigmillar having a species richness of 17, Figgate park is more diverse. Since these differences are not to do with richness, they must be a result of *evenness* - whether a few species are dominant, or whether abundance is relatively evenly distributed.
+The summary table should look like this:
 
-# Let's visualise - SAD diagrams
+<img width="416" alt="image" src="https://user-images.githubusercontent.com/114161055/204820676-43632500-91d4-4010-b271-b1370a9b88cf.png">
 
-Based on the summary table, we concluded that despite there being only two values of species richness, the parks still differ in diversity. We hypothesized that this is due to differences in evenness.
+By looking at the summary table, we can see that it would have been wrong to only report species richness - Despite the fact that they accomodate the same number of species, Blackford Hill has a diversity around 30% higher than the Meadows! Similary, despite both Figgate and Craigmillar having a species richness of 20, Figgate park is 30% more diverse. Since these differences are not to do with richness, they must be a result of *evenness* - whether a few species are dominant, or whether abundance is relatively evenly distributed. If we look at the values of Simpson's dominance, they seem to support this point. The most striking is the difference between Figgate and Craigmillar - even though they have the same number of species present, the dominance for Craigmillar is more than 3.5 times the value for Figgate Park! 
 
-It might be a good idea to try and visualise evenness. We will do this by making a simple SAD diagram for each park. Don't let the name fool you - SAD here stands for Species Abundance Distribution, and NOT how working in RStudio makes you feel. (Not at all. RStudio is always a happy, comforting place.) \*insert error message abt divergent transitions. Well, maybe *almost* always.
+But these indices are difficult to interpret from just a number - and looking at tables must be quite boring by now.
 
-SAD models describe the distribution of population densities of the species present in a community. They display the number of species that are represented by 1,2,...n individuals in the community. For scientific purposes, this plot should be used only when the community is large and contains many species - clearly not true for our samples. However, for the purpose of this tutorial, it is perfectly fine to illustrate our data with a SAD diagram.
+Let's visualise!
 
-On graphs, SAD-s usually have abundance "classes" (how many individuals of a given species are present), and on the y axis, we have the frequency of each abundance class. The x axis usually has a log-scale. For the purpose of our "study", we won't do any log-transforms - as we are working with a small sample size. For more complex analyses, you would need to take this step.
+# Basic visualisation -  SAD diagrams
+
+Based on the summary table, we concluded that despite there being only two values of species richness, the parks still differ in diversity. Since diversity is determined by richness and evenness, and richness is identical for the two "pairs" (Meadows & Blackford, and Craigmillar & Figgate), the differences must be in evenness. Species evenness is highest when all species in a sample have a similar abundance, and approaches zero if one or more species is dominant in the community, or if there is a large variation in abundances of different species.
+
+It might be a good idea to try and visualise evenness. We will first do this by making a simple SAD diagram for each park. Don't let the name fool you - SAD here stands for Species Abundance Distribution, and NOT how working in RStudio makes you feel. (Not at all. RStudio is always a happy, comforting place.) \*insert error message abt divergent transitions. Well, maybe *almost* always.
+
+SAD diagrams describe the distribution of population densities of the species present in a community. They display the number of species that are represented by 1,2,...n individuals in the community. For scientific purposes, this plot should be used only when the community is large and contains many species - clearly not true for our samples. However, for the purpose and level of this tutorial, it is perfectly fine to illustrate our data with a SAD diagram.
+SAD-s usually have abundance "classes" (how many individuals are observed) on the x axis, and the frequency of each abundance class on the y axis (how many species fall within the "class", i.e. how many species has an abundance of, say, 5). The x axis usually has a log-scale. For the purpose of our "study", we won't do any log-transformations - as we are working with a small sample size. For more complex analyses, you would need to take this step.
 
 *insert how sad diagrams usually look like*
 
-For making a SAD diagram for each of our parks, we will first make a new dataset:one containing the *frequency of each abundance value WITHIN a site.* (For example, how many species in Figgate Park have an abundance of 10 individuals?)
+For making a SAD diagram for each of our parks, we will first make a new dataset: one that contains the *frequency of each abundance value WITHIN a site.* (For example, how many species in Figgate Park have an abundance of 10 individuals?)
 
-For this, we make a new dataframe called parks_frequency.
+For this, we will create a new dataframe called parks_frequency.
 
 ```{r}
 parks_frequency<- parks_tidy %>% 
@@ -305,19 +325,37 @@ parks_frequency<- parks_tidy %>%
 
 For larger datasets, you would use abundance classes - add something??
 
-With `length(species)`, we ask R to simply count the number of observations in the `species` column. The important part to note is that we already grouped the data into `site`, and within that grouping, to `abundance` - so R will count the number of `species` corresponding each abundance value within each site.
+With `length(species)`, we ask R to simply count the number of observations in the `species` column. The important part to note is that we already grouped the data into `site`, and within that grouping, to `abundance` - so R will count the number of `species` corresponding each abundance value within each park.
 
-Great! We now have a new dataframe, based on which we will make our SAD graphs.
+Great! We now have a new dataframe, based on which we will make our SAD graphs. Instead of making a separate graph for each site "by hand", which would be tedious and long, we will use `facet_wrap` to do that for us.
 
-```{r}
+```r
 (sad <- parks_frequency %>%  
-    #calling our plot "sad" and making it by passing the dataset down a pipe
-    ggplot(aes(x = abundance, y=frequency_of_abundance)) +
-    #defining x and y axes
-    geom_bar(stat="identity") +
-    #telling R that we want a bar graph
-    facet_wrap(~ site, scale = 'free'))
-    #making a separate plot for each site, and allowing the x axis to vary for the    individual plots
-
-
+    # calling our graph sad
+    ggplot(aes(x = abundance, y = frequency_of_abundance, fill = site)) +
+    geom_bar(stat = "identity") +
+    # specifying that we want a bar graph
+    theme_tufte()+
+    facet_wrap(~ site, scale = "free") +
+    # making separate plots for sites, and allowing the scales (x and y axes to vary)
+  labs(x = "\nNumber of individuals", y = "Number of species\n")+
+  # giving informative names to the axes
+  theme_few()+
+  # adding a theme from ggthemes - feel free to add a different one!
+  scale_fill_brewer(palette = "Accent") + 
+  # adding a color palette - feel free to add a different one!
+  theme(legend.position = "none",
+        #removing the legend as the axes provide enough information 
+        axis.text = element_text(size = 14), 
+        axis.title = element_text(size = 16)))
+        #increasing font size
 ```
+
+This is how our plot looks like: 
+
+<img width="400" height = "400" alt="image" src="https://user-images.githubusercontent.com/114161055/204835023-7a553909-a56d-4561-8395-62c5b2f744a0.png">
+
+Interesting. Definitely not the best plot - what are those gaps doing in the Meadows and Craigmillar? Also, why is Figgate just one big block?
+Worry not - this all has to do with oversimplification, and the `scale = free` command. In real life, log-transformation and abundance classes instead of discrete numbers are used so that there are no "empty gaps" like in our Meadows and Blackford plots. And using a uniform scale would get rid of the "block" that currently represents Figgate park. But we will not bother with that - there are still many inferences we can make from our graph. 
+
+These plots represent *evenness* - and intuitively, based on the bars, we can tell that Figgate is *very even* - that is, there are only 4 abundance classes present, and an equal number of species belong to each - it is the equal height of the bars that make that plot look like a block. How unlikely! Maybe, just maybe this surprising evenness has to do with the fact that we are working with a fake dataset? Who knows. Anyway, the differences shown by our indices in the previous part are now also more apparent - there is certainly a big difference between the SAD graph for Figgate and Craigmillar, and those for Meadows and Blackford. Figgate and Blackford have a relatively even species composition, whereas the other two look very uneven - most species have only one individual present, and there  one species dominates - by having an abundance of 30 individuals in Craigmillar and 10 in the Meadows.

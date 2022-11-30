@@ -168,6 +168,8 @@ ungroup()
 )
 # By putting the entire code in brackets, the dataframe is displayed immediately in the console.
 ```
+
+For this small dataset, you might say species richness is easy to calculate by hand - and you would be right! However, imagine working with large datasets, comparing large, and very rich communities - wouldn't it be better to just do it with a few lines of code?
 From the output, we can see that we encountered 7 species in the Meadows and on Blackford Hill, and 17 in both Figgate and Craigmillar park. We can make a simple barplot in `ggplot` to visualise this:
 
 ```r
@@ -190,21 +192,42 @@ From the output, we can see that we encountered 7 species in the Meadows and on 
     #tilting the text of the x axis
 ```
 
-With only 4 sites, a barplot is not much different from the dataframe in terms of visualisation - however, it would show be more if we were working with larger datasets, containing, let's say, 100 sites. Remember that the aim of this tutorial is just to introduce you to exploring community composition - hence why our dataset is simple and small!
+With only 4 sites, a barplot is not much different from the dataframe in terms of visualisation - however, it would show be more if we were working with larger datasets, containing, let's say, 100 sites. Remember that the aim of this tutorial is just to introduce you to exploring community composition - hence why our dataset is simple and small! Let's save our plot - we can also do this with code using `ggsave` and entering the folder within the working directory we want to save it to.
+
+```r
+ggsave(barplot_richness, file="background/barplot_richness.png", width= 6, height=6)
+#save our plot - don't forget to enter your own filepath!
+```
 
 We can intuitively tell these values don't tell us too much - for example, what species were there? How much did the species composition overlap?
 
-Could we use this number to compare the parks? Based on these values, we might say "Blackford Hill and the Meadows were less diverse, whereas Craigmillar and Figgate had more species, so they were more diverse". This, however, would be WRONG - since diversity as an ecological concept not only includes the number of species present at a given site, but also incorporates *how evenly the total abundance is distributed among these species.* We can say "we found 17 unique species in Figgate and Craigmillar, and 7 in the Meadows and Blackford" , **describing** each **individual site**- but species richness on its on is generally **not** the best way to make **comparisons between sites.** We should also be careful with saying 
+Could we use this number to compare the parks? Based on these values, we might say "Blackford Hill and the Meadows were less diverse, whereas Craigmillar and Figgate had more species, so they were more diverse". This, however, would be WRONG - since diversity as an ecological concept not only includes the number of species present at a given site, but also incorporates *how evenly the total abundance is distributed among these species.* We can say "we found 17 unique species in Figgate and Craigmillar, and 7 in the Meadows and Blackford" , **describing** each **individual site**- but species richness on its on is generally **not** the best way to make **comparisons between sites.** We should also be careful with saying " Craigmillar Park and Figgate Park have similar community composition because both have a species richness of 17 ". Despite having identical species richness, the way communities are assembled may still be very different among sites.  
 
-This brings us to our next concept: Diversity indeces.
-
-For this small dataset, you might say species richness is easy to calculate by hand - and you would be right! However, imagine working with large datasets, comparing large, and very rich communities - wouldn't it be better to just do it with a few lines of code?
+This brings us to our next concept: **Diversity** .
 
 # Diversity
 
-Diversity indeces are considered more informative than species richness. There are many indeces out there, but a general feature of these formulas is that they incorporate species richness AND evenness - that is, how overall abundance is distributed among the species present.
+Diversity indeces are considered more informative than species richness. Diversity incorporates both richness and comonness and rarity of species - evenness. It accounts for how many species can be found at a site, and also how individuals within the community are distributed among species. There are many diversity indeces out there, and it's a hot topic in science which is best. For this tutorial, we will use two of the most simple and basic measures of diversity: the Shannon-Wiener diversity index (H') and Simpson's index of dominance (D).
 
-For this tutorial, we will use Simpson's indeces. To make it a bit more complicated, we introduce 3 of them: Simpson's index of dominance, Simpson's diversity index, and Simpson's reciprocal index.
+Simpson's dominance focuses on common species, and as the name suggests, it's most useful for determining dominance. It gives us a probability that if we randomly point at two individuals in a given community, they will belong to the same species. As it is essentially a measure of probability, it ranges between 1 (high dominance) and 0 (low dominance). The reciprocal of D, 1/D can be used as a measure of diversity, and is not surprisingly called *Simpson's reciprocal index*.
+
+The *Shannon-Wiener diversity index* or *Shannon's diversity* tells us about rare species. It is less sensitive to sample size than Simpson's reciprocal, and it is the most popular index to determine diversity. 
+
+Something all diversity indeces have in common is that they work with *relative abundance*. This value is specific to each species, and indicates how common or rare a given species relative to others. It is calculated as the number of individuals belonging to a given species divided by the number of all individuals present in the area. Relative abundances in a community should add up to 1.
+
+We will first add a new column to our existing `parks_tidy` dataframe for relative abundance of each species within the four parks. 
+
+```r
+parks_tidy <- parks_tidy %>%
+  # we don't need to make a new dataframe as we are only adding a column,
+  # not changing any of the existing ones.
+  group_by(site) %>% 
+  mutate(relative.abundance = abundance/sum(abundance)) %>% 
+  # creating a new column 
+  ungroup()
+  # removing groupings
+```
+Note that **we usually don't overwrite the dataframe when we change things in it, we rather make a new dataframe and keep the previous one**. However, in this instance that would be redundant as we are not altering or removing any columns, only adding a new column based on existing ones. So here, we can overwrite the dataframe, by passing our old object down a pipe, and assigning the new object the same name as the old one.
 
 Let's calculate dominance first:
 

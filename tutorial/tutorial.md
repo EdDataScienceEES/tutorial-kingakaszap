@@ -108,7 +108,7 @@ library (tidyverse) # contains packages dplyr for efficient data manipulation,
 library (ggthemes) # we will use ggthemes to add a cool theme to our graphs
 ```
 
-Let's import the dataset. This is a fake dataset created for this tutorial, but let's imagine it's the actual field data of your bird observations you collected in the parks. The dataset is in the ZIP folder you downloaded earlier, under the name `field_data.csv`. You can import it manually with clicking on *Import dataset* -\> *From Text (base)*. But, of course, you can also do it with code.
+Let's import the dataset. This is a fake dataset created for this tutorial, but let's imagine it's the actual field data of your bird observations you collected in the parks. The dataset is in the ZIP folder you downloaded earlier, in the "data" folder under the name `field_data.csv`. You can import it manually with clicking on *Import dataset* -\> *From Text (base)*. But, of course, you can also do it with code.
 
 ``` r
 # Import the dataset

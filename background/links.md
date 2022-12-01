@@ -28,7 +28,7 @@
 
 [primer of ecology diversity with r](https://hankstevens.github.io/Primer-of-Ecology/diversity.html#species-composition) - finally something thats not vegan (me every day lol)!! - this might actually be useful
 
-[useful background on diversity, and plpots] (https://www.marinespecies.org/introduced/wiki/Measurements_of_biodiversity)
+[useful background on diversity, and plpots](https://www.marinespecies.org/introduced/wiki/Measurements_of_biodiversity)
 
 
 

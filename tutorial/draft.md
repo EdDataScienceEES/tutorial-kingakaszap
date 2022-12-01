@@ -44,6 +44,7 @@ No? Maybe it's just me then. Anyway, community ecology is a fascinating branch o
 In this tutorial, to keep it simple and easy to grasp, we are using a small scale. But the basic concepts introduced can be applied on the global scale as well. Of course, this comes at the cost of using way more complicated equations, like this:
 
 <img src="https://user-images.githubusercontent.com/114161055/204779399-bda43e61-5647-4162-a74b-b0a816ff0dd5.png" alt="image" width="364"/>
+*(from Jost et al 2006)
 
 Don't worry, since our scale is small and the aim of this tutorial is to introduce you to the basic, the equations we use will be a lot easier to understand.
 

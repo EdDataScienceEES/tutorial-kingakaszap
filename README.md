@@ -2,7 +2,7 @@
 
 The tutorial can be accessed as a webpage [here](https://kingakaszap.github.io/describing_communities/)
 
-All material needed to complete this tutorial can be found in this repository. This repo also includes my workflow and the background of the assignment. If you are only interested in completing the tutorial, I suggest you do it in [this public repository](link public repo) instead.
+All material needed to complete this tutorial can be found in this repository. This repo also includes my workflow and the background of the assignment. If you are only interested in completing the tutorial, I suggest you do it in [this public repository](https://github.com/kingakaszap/describing_communities) instead.
 
 If you have any questions or feedback, contact s2024589@ed.ac.uk
 
@@ -13,4 +13,20 @@ If you have any questions or feedback, contact s2024589@ed.ac.uk
 
 ## Repo Structure:
 
+[Background](background) - This folder contains the background of the tutorial and the workflow. It includes readings, links to websites I used in the tutorial or during the workflow, and the instructions on which the assignment is based.
 
+[Data](data) - This folder holds the final (fake) dataset used in the tutorial.
+
+[Plots](plots) - This folder contains all the plots made during the workflow and in the tutorial.
+
+[Scripts](scripts) - This folder contains a workflow script and the final script with the code used in the tutorial.
+
+[Tutorial](tutorial) - This folder holds the final markdown file for the tutorial.
+
+[Workflow](workflow) - This folder contains files used during my workflow, such as the coding club tutorial template, an outline for the tutorial and ideas.
+
+
+
+
+![image](https://user-images.githubusercontent.com/114161055/205094494-960a203a-e3c7-4256-ab31-e682fb1d6cbb.png)
+*this is a copyright-free image from* [pexels.com](pexels.com)

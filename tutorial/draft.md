@@ -25,6 +25,7 @@
 6.  Basic visualisation - SAD diagrams
 
 7.  A bit more complex visualisation - Rank-Abundance diagrams
+8.  Summary
 
 # Introduction
 
@@ -416,8 +417,22 @@ Let's interpret this! On the x axis, we have ranks - species ranked from most to
 
 I mentioned before that we can also infer richness from these graphs - indeed, the number of species present is represented by the number of dots in each graph. We can see what we already know from the previous sections: that Figgate and Craigmillar have more species than the Meadows and Blackford. However, we can also intuitively tell about evenness (Probably more intuitively than from the SAD graphs). It is not hard to tell that since the line connecting the dots is straight, or nearly straight in the case of Blackford and Figgate, individuals are evenly distributed among species in these parks. However, the large drop between the first and the second dot in the graphs for Craigmillar and the Meadows show that these communities are uneven, and have one **highly dominant** species. 40% of all individuals belong to the same species in Craigmillar, *despite there being 20 species present*, and half of the birds observed in the Meadows were the same species. 
 
+Let's save our plot:
+
 ``` r
-ggsave(rank_abundance_plots, file="background/rank_abundance.png", width= 6, height=6) 
+ggsave(rank_abundance_plots, file = "background/rank_abundance.png", width = 6, height = 6) 
+# add your own filepath
 ```
+
+# Summary
+
+Well done for making it this far! There's not much left to do but to summarize what we learnt - and, of course, make the report for the City Council! In this tutorial, we learnt the basics of describing communities in R, including...
+
+- How to import field data into `RStudio` and convert it into a tidy format.
+- How to describe communities using species richness - and why that might not be the best metric to compare sites.
+- How to describe and compare communities using diversity indices
+- How to make a SAD diagram, and the drawbacks of using this graph with a small sample size
+- How to visualise community composition with rank-abundance diagrams, and how to infer them.
+
 
 

@@ -65,13 +65,12 @@ In ecology, there is usually a big difference between the format observations ar
 
 Open RStudio, and click on `File/New File/R Script`. It is good practice to "introduce your code" - so that anyone who may look at it knows immediately whose work it is, when was it created, and for what purpose. It is also useful if you ever want to look back on your work, or find a specific script. In RStudio, you can add comments using a hashtag ( `#` ). R will interpret this as text and not attempt to run it as code.
 
-    ```r
+ ``` r
     # Describing communities  (feel free to add a different title!)
     # Your Name
     # Date
     # Any other short comments you want to add to the introduction
-
-    ```
+ ```
 
 Now, before we import our data, we need to set our working directory. This is a folder on your computer where all your work, including this script, data, plots, etc) should be saved. You can set your working directory manually by clicking on `Session` on the top left, and choosing `Set working directory/Choose directory`. However, you can also do it with code:
 
@@ -366,11 +365,11 @@ Still, there might be a better way to visualise evenness. That brings us to the 
 
 # A bit more complex visualisation - Rank-Abundance diagrams
 
-Let's have a look at how we can plot the same data a different way! A common way to do this is creating Rank-Abundance diagrams. These are similar to SAD graphs as they visualise evenness and commonness/rarity. pecies are assigned a **rank** based on abundance, with most abundant ranked 1 and least abundant S (where S is the number of species in the community). Like our diversity indices, rank-abundance requires a knowledge of the **relative abundance** of each species. We then plot relative abundance against rank to visualise the community. This way, we will get rid of the annoying gaps present in the previous graphs, and are able to visualise richness within our graphs.
+Let's have a look at how we can plot the same data a different way! A common way to visualise community composition is creating Rank-Abundance diagrams. These are similar to SAD graphs as they visualise evenness and commonness/rarity. Species are assigned a **rank** based on abundance, with most abundant ranked 1 and least abundant S (where S is the number of species in the community). Like our diversity indices, rank-abundance requires a knowledge of the **relative abundance** of each species. We then plot relative abundance against rank to visualise the community. This way, we will get rid of the annoying gaps present in the previous graphs, and are able to visualise richness as well as evenness!.
 
-Since this is a general tutorial, and it is already getting too long, we will only include the very basics of rank-abundance diagrams. However, if you want to know more about them, and how to make them prettier, or starting from scratch, check out [this](dara) tutorial.
+Since this is a general tutorial, and it is already getting too long, we will only include the very basics of rank-abundance diagrams. However, if you want to know more about them, and how to make them prettier, or starting from scratch, check out [this](https://darahubert.github.io/rank-abundance-tutorial/) tutorial.
 
-To make the plots, we will first make a new dataframe containing columns for a) relative abundance in percentages and b) ranks assigned to each species. As with everything before, we want to retrieve these values separately for each parks, as we want to compare between them.
+To make the plots, we will first make a new dataframe containing columns for a) relative abundance in percentages and b) ranks assigned to each species. As with everything before, we want to retrieve these values separately for each park, as we want to compare between them.
 
 ``` r
 parks_rankabundance <- parks_tidy %>% 
@@ -385,9 +384,9 @@ parks_rankabundance <- parks_tidy %>%
   
 ```
 
-Above, we used `mutate` to make new columns. Within the `mutate` command, we used `rank` and `-` to rank abundances in descending order. As each species should have a unique rank for our plots, we used \`tied.method="random" to assign a rank at random between species with equal number of individuals.
+Above, we used `mutate` to make new columns. Within the `mutate` command, we used `rank` and `-` to rank abundances in descending order. As each species should have a unique rank for our plots, we used `ties.method="random"` to assign a rank at random between species with equal number of individuals.
 
-You might remember that before, we did not make a new dataframe when we added a column. However, we will now to keep things interesting, and to keep the original dataframe concise - as rank is not really a relevant metric for any other purpose than making these plots, whereas the relative abundance column we added when we overwrote the tidy dataframe was used continuously throughout the tutorial.
+You might remember that before, we did not make a new dataframe when we added a column. However, we did now to keep the original dataframe concise - as rank is not really a relevant metric for any other purpose than making these plots, whereas the relative abundance column we added when we overwrote the tidy dataframe was used continuously throughout the tutorial.
 
 Now, let's make our plots!
 
@@ -400,29 +399,22 @@ Now, let's make our plots!
   geom_line (colour= "black") +
   # adding a line connecting the points
   labs (x = "\nRank", y = "Relative abundance (%)\n") +
-  facet_wrap (~site, scale = "free") +
-  # making separate plots for sites, allowing scales of axes to vary
+  facet_wrap (~site) +
+  # making separate plots for sites
   theme_few() +
   # adding a theme from ggthemes - feel free to add a different one!
   theme (legend.position = "none"))
   # removing the legend as the axes provide enough information
 ```
+Note that unlike for the SAD diagrams, we did not include `scale = free` in the `facet_wrap` bracket - this means that all four graphs have the same scale on the x and y axes. This allows for better comparison, however, with the already imperfect SAD plots (remember the gaps and the block that is Figgate? Maybe there is something in the name after all...), not allowing scales to vary would have made our plots look even more clustered and odd. 
 
-<img src="https://user-images.githubusercontent.com/114161055/204849468-2fe83e9a-2961-4b92-8d98-1701577a25c4.png" alt="image" width="400" height="400"/>
+You should now have this plot:
+
+<img src="https://user-images.githubusercontent.com/114161055/204849861-d2b24d6f-2046-4a6a-bba4-ea4ee45babcb.png" alt="image" width="400" height="400"/>
+
 
 ``` r
 ggsave(rank_abundance_plots, file="background/rank_abundance.png", width= 6, height=6) 
 ```
 
-<img src="https://user-images.githubusercontent.com/114161055/204849861-d2b24d6f-2046-4a6a-bba4-ea4ee45babcb.png" alt="image" width="400" height="400"/>
 
-``` r
-(rank_abundance_plots2 <- parks_rankabundance %>% 
-  ggplot (aes (x = rank, y = rel.abund.percent)) +
-  geom_point (aes (color = species, fill = species), size = 2) +
-  geom_line (colour= "black") +
-  labs (x = "\nRank", y = "Relative abundance (%)\n") +
-  facet_wrap (~site, scale = "free") +
-  theme_few() +
-  theme (legend.position = "none"))
-```

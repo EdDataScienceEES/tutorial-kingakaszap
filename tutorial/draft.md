@@ -306,11 +306,22 @@ Let's visualise!
 
 Based on the summary table, we concluded that despite the fact that we only observed  two values of species richness, the parks still differ in diversity. Since diversity is determined by richness and evenness, and richness is identical for the two "pairs" (Meadows & Blackford, and Craigmillar & Figgate), the differences must be in evenness. Species evenness is highest when all species in a sample have a similar abundance, and approaches zero if one or more species is dominant in the community, or if there is a large variation in abundances of different species.
 
-It might be a good idea to try and visualise evenness. We will first do this by making a simple SAD diagram for each park. Don't let the name fool you - SAD here stands for Species Abundance Distribution, and NOT how working in RStudio makes you feel. (Not at all. RStudio is always a happy, comforting place.) \*insert error message abt divergent transitions. Well, maybe *almost* always.
+It might be a good idea to try and visualise evenness. We will first do this by making a simple SAD diagram for each park. Don't let the name fool you - SAD here stands for Species Abundance Distribution, and NOT how working in RStudio makes you feel. Not at all. RStudio is always a happy, comforting place.
 
-SAD diagrams describe how total abundance is distributed among species in the community. They display how many species that are represented by 1,2,...n individuals, with "abundance (classes)" on the x axis and "number of species" on the y axis. For scientific purposes, this plot should be used only when the community is large and contains many species - clearly not true for our samples. However, for the purpose and level of this tutorial, it is perfectly fine to illustrate our data with a SAD diagram. SAD-s usually have abundance "classes" (how many individuals are observed) on the x axis, and the frequency of each abundance class on the y axis (how many species fall within the "class", i.e. how many species has an abundance of, say, 5). The x axis usually has a log-scale. For the purpose of our "study", we won't do any log-transformations - as we are working with a small sample size. For more complex analyses, you would need to take this step.
+...
 
-*insert how sad diagrams usually look like*
+<img src="https://user-images.githubusercontent.com/114161055/205046446-e537867b-4fd5-4010-b582-238f1e6460f0.png" alt="image" height="300"/>
+
+Well, maybe *almost* always.
+
+Anyway, SAD diagrams describe how total abundance is distributed among species in the community. They display how many species that are represented by 1,2,...n individuals, with "abundance (classes)" on the x axis and "number of species" on the y axis. For scientific purposes, this plot should be used only when the community is large and contains many species - clearly not true for our samples. However, for the purpose and level of this tutorial, it is perfectly fine to illustrate our data with a SAD diagram. SAD-s usually have abundance "classes" (how many individuals are observed) on the x axis, and the frequency of each abundance class on the y axis (how many species fall within the "class", i.e. how many species has an abundance of, say, 5). The x axis usually has a log-scale. For the purpose of our "study", we won't do any log-transformations - as we are working with a small sample size. For more complex analyses, you would need to take this step.
+
+This is how a SAD diagram with log scale would look like - we will just stick to the basics. 
+
+<img src="https://user-images.githubusercontent.com/114161055/205047016-857e8793-8845-4c67-9bed-f3cff20535dd.png" alt="image" height="300"/>
+
+*image sourced from Khaluzny et al. 2015*
+
 
 For making a SAD diagram for each of our parks, we will first make a new dataset: one that contains the *frequency of each abundance value WITHIN a site.* (For example, how many species in Figgate Park have an abundance of 10 individuals?)
 

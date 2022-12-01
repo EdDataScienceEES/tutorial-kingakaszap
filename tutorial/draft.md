@@ -412,6 +412,9 @@ You should now have this plot:
 
 <img src="https://user-images.githubusercontent.com/114161055/204849861-d2b24d6f-2046-4a6a-bba4-ea4ee45babcb.png" alt="image" width="400" height="400"/>
 
+Let's interpret this! On the x axis, we have ranks - species ranked from most to least abundant within each park. On the y axis, we have relative abundance, again, within parks - so the position of, say, the first "dot" tells us the relative abundance of the most abundant species (assigned rank 1), the second about the relative abundance of the second most abundant species, and so on. In other words, it tells us *how dominant* the most abundant species is in the environment. 
+
+I mentioned before that we can also infer richness from these graphs - indeed, the number of species present is represented by the number of dots in each graph. We can see what we already know from the previous sections: that Figgate and Craigmillar have more species than the Meadows and Blackford. However, we can also intuitively tell about evenness (Probably more intuitively than from the SAD graphs). It is not hard to tell that since the line connecting the dots is straight, or nearly straight in the case of Blackford and Figgate, individuals are evenly distributed among species in these parks. However, the large drop between the first and the second dot in the graphs for Craigmillar and the Meadows show that these communities are uneven, and have one **highly dominant** species. 40% of all individuals belong to the same species in Craigmillar, *despite there being 20 species present*, and half of the birds observed in the Meadows were the same species. 
 
 ``` r
 ggsave(rank_abundance_plots, file="background/rank_abundance.png", width= 6, height=6) 

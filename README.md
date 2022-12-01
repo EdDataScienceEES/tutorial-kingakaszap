@@ -1,6 +1,6 @@
 # Tutorial Assigment - Describing communities in R
 
-The tutorial can be accessed as a webpage [here](https://kingakaszap.github.io/describing_communities/)
+The tutorial can be accessed as a webpage [here](https://kingakaszap.github.io/describing_communities/). Alternatively, it is contained within this repo as a Markdown file: [Click here to see it!](tutorial/tutorial.md)
 
 All material needed to complete this tutorial can be found in this repository. This repo also includes my workflow and the background of the assignment. If you are only interested in completing the tutorial, I suggest you do it in [this public repository](https://github.com/kingakaszap/describing_communities) instead.
 
@@ -21,7 +21,7 @@ If you have any questions or feedback, contact s2024589@ed.ac.uk
 
 [Scripts](scripts) - This folder contains a workflow script and the final script with the code used in the tutorial.
 
-[Tutorial](tutorial) - This folder holds the final markdown file for the tutorial.
+[Tutorial](tutorial) - This folder holds the final markdown file for the [tutorial](tutorial/tutorial.md), plots generated in the tutorial, and references.
 
 [Workflow](workflow) - This folder contains files used during my workflow, such as the coding club tutorial template, an outline for the tutorial and ideas.
 

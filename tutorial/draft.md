@@ -189,6 +189,9 @@ For this small dataset, you might say species richness is easy to calculate by h
     axis.text.x = element_text(angle = 45, hjust = 1)))
     #tilting the text of the x axis
 ```
+<p align="center">
+<img src="barplot_richness.png" alt="image" width="450"/>
+</p>
 
 With only 4 sites, a barplot is not much different from the dataframe in terms of visualisation - however, it would show be more if we were working with larger datasets, containing, let's say, 100 sites. Remember that the aim of this tutorial is just to introduce you to exploring community composition - hence why our dataset is simple and small! Let's save our plot - we can also do this with code using `ggsave` and entering the folder within the working directory we want to save it to.
 
@@ -249,7 +252,7 @@ parks_tidy %>%
 
 This should yield the output
 
-<img src="https://user-images.githubusercontent.com/114161055/204817971-fb60be6a-374e-4753-a1de-662b99ff6c6f.png" alt="image" width="230"/>
+<img src="https://user-images.githubusercontent.com/114161055/204817971-fb60be6a-374e-4753-a1de-662b99ff6c6f.png" alt="image" width="330"/>
 
 Now let's calculate Shannon's diversity:
 
@@ -259,12 +262,9 @@ parks_tidy %>%
   summarise(shannons.div = -sum(relative.abundance*log(relative.abundance))) %>%
   ungroup()
 ```
-
-<img src="https://user-images.githubusercontent.com/114161055/204818496-bd0b29af-4496-4ff9-becf-b0e842cae8d2.png" alt="image" width="220"/>
-
 for which you should get
 
-<img src="https://user-images.githubusercontent.com/114161055/204819645-a9e6f231-03c1-4522-aa5b-2d4d41264579.png" alt="image" width="402"/>
+<img src="https://user-images.githubusercontent.com/114161055/204818496-bd0b29af-4496-4ff9-becf-b0e842cae8d2.png" alt="image" width="320"/>
 
 Great! Now let's make a summary table which includes all the indices we have introduced: species richness, Simpson's dominance and Shannon's diversity. We can, of course, do this within one pipe:
 
@@ -286,7 +286,7 @@ View(summary)
 
 The summary table should look like this:
 
-<img src="https://user-images.githubusercontent.com/114161055/204820676-43632500-91d4-4010-b271-b1370a9b88cf.png" alt="image" width="416"/>
+<img src="https://user-images.githubusercontent.com/114161055/204820676-43632500-91d4-4010-b271-b1370a9b88cf.png" alt="image" width="616"/>
 
 By looking at the summary table, we can see that it would have been wrong to only report species richness - Despite the fact that they accomodate the same number of species, Blackford Hill has a diversity around 30% higher than the Meadows! Similary, despite both Figgate and Craigmillar having a species richness of 20, Figgate park is 30% more diverse. Since these differences are not to do with richness, they must be a result of *evenness* - whether a few species are dominant, or whether abundance is relatively evenly distributed. If we look at the values of Simpson's dominance, they seem to support this point. The most striking is the difference between Figgate and Craigmillar - even though they have the same number of species present, the dominance for Craigmillar is more than 3.5 times the value for Figgate Park!
 
@@ -411,7 +411,9 @@ Note that unlike for the SAD diagrams, we did not include `scale = free` in the 
 
 You should now have this plot:
 
-<img src="https://user-images.githubusercontent.com/114161055/204849861-d2b24d6f-2046-4a6a-bba4-ea4ee45babcb.png" alt="image" width="400" height="400"/>
+<p align="center">
+<img src="rankabundance.png" alt="image" width="500" height="500"/>
+</p>
 
 Let's interpret this! On the x axis, we have ranks - species ranked from most to least abundant within each park. On the y axis, we have relative abundance, again, within parks - so the position of, say, the first "dot" tells us the relative abundance of the most abundant species (assigned rank 1), the second about the relative abundance of the second most abundant species, and so on. In other words, it tells us *how dominant* the most abundant species is in the environment. 
 

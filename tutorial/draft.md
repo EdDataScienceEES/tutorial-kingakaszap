@@ -2,37 +2,28 @@
 
 # Tutorial Steps
 
-1.  Introduction
+ #### <a href="#section1"> 1. Introduction</a>
+ #### <a href="#section2"> 2. Setting the scene</a>
+ #### <a href="#section3"> 3. Importing and tidying field data</a>
+ #### <a href="#section4"> 4. Species richness</a>
+ - calculating richness
+ - visualising differences in species richness
+ #### <a href="#section5"> 5. Calculating diversity indices</a>
+ - Simpson's dominance
+ - Shannon-Wiener diversity index
+ - Making a summary table
+ #### <a href="#section6"> 6. Basic visualisation - SAD diagrams</a>
+ #### <a href="#section7"> 7. A bit more complex visualisation - Rank-Abundnce diagrams</a>
+ #### <a href="#section8"> 8. Summary</a>
 
-2.  Setting the scene
-
-3.  Importing and tidying field data
-
-4.  Species richness
-
-    -   calculating richness
-
-    -   visualising differences in species richness
-
-5.  Calculating diversity indices
-
-    -   Simpson's dominance
-
-    -   Shannon-Wiener diversity index
-
-    -   Making a summary table
-
-6.  Basic visualisation - SAD diagrams
-
-7.  A bit more complex visualisation - Rank-Abundance diagrams
-8.  Summary
-
+<a name="section1"></a>
 # Introduction
 
 This tutorial will introduce some basic methods of describing and comparing biological communities using R. It builds on some methods and concepts used in community ecology, but if you've never done community ecology before, that's also fine! The concepts used are relatively simple, and will be explained in detail in the tutorial. The tutorial is aimed at beginners, but expects you to have downloaded RStudio and are somewhat familiar with its layout. If you are completely new to R and RStudio, check out this tutorial! (Insert coding club reference) We will also be making plots to visualise our data with ggplot. The terminology used when plotting with ggplot takes practice to grasp, and since it is not the main focus of this tutorial, it is not explained in detail. So don't worry if that bit is slightly confusing! If you're interested in data visualisation, check out [this](insert%20link) coding club tutorial.
 
 All the material you need to complete this tutorial can be found in [this repository](link%20to%20repo). Click on `Code/ Download ZIP` and unzip the folder, or clone the repository to your own GitHub account.
 
+<a name="section2"></a>
 # Setting the scene
 
 Have you ever wondered how communities occupying different habitats (or micro-habitats) vary? Or whether habitat types vary in the number of species they accomodate? For example, how your backyard might differ from the nearby forest?
@@ -60,6 +51,7 @@ What values do you report to the council when describing each park? How do you m
 
 Let's begin...
 
+<a name="section3"></a>
 # Importing and tidying field data
 
 In ecology, there is usually a big difference between the format observations are recorded in the field, and the format a programming language such as R requires to be able to work with your data. Say you collected your data on paper, trying to make somewhat of a table, while also adding notes to your observations. You had to be quick though, because the objects you observe (the birds) move quickly (how annoying!) So it is definitely not the neatest of tables. You copied your observations into Excel, exactly in the same format as you recorded them, to reduce copying errors. Now you want to start working with your data...
@@ -147,6 +139,7 @@ View(parks_tidy) # see how our dataset looks like now
 
 Looks good! There are only 3 columns, like we wanted, and the `abundance` column is now numeric. We don't have any N/A-s either. We can see that the number of rows increased from 4 to 44 - there is a reason why this is called "long format"...
 
+<a name="section4"></a>
 # Calculating species richness
 
 Right! Our data is in a tidy format. Now we can start working on it, and start extracting information on the community composition of birds in each parks- after all, that's what the City Council pays us for!
@@ -206,6 +199,7 @@ Could we use this number to compare the parks? Based on these values, we might s
 
 This brings us to our next concept: **Diversity** .
 
+<a name="section5"></a>
 # Diversity
 
 Diversity indeces are considered more informative than species richness. Diversity incorporates both richness and comonness and rarity of species - evenness. It accounts for how many species can be found at a site, and also how individuals within the community are distributed among species. There are many diversity indeces out there, and it's a hot topic in science which is best. For this tutorial, we will use two of the most simple and basic measures of diversity: the Shannon-Wiener diversity index (H') and Simpson's index of dominance (D).
@@ -294,6 +288,7 @@ But these indices are difficult to interpret from just a number - and looking at
 
 Let's visualise!
 
+<a name="section6"></a>
 # Basic visualisation - SAD diagrams
 
 Based on the summary table, we concluded that despite there being only two values of species richness, the parks still differ in diversity. Since diversity is determined by richness and evenness, and richness is identical for the two "pairs" (Meadows & Blackford, and Craigmillar & Figgate), the differences must be in evenness. Species evenness is highest when all species in a sample have a similar abundance, and approaches zero if one or more species is dominant in the community, or if there is a large variation in abundances of different species.
@@ -364,6 +359,7 @@ These plots represent *evenness* - and intuitively, based on the bars, we can te
 
 Still, there might be a better way to visualise evenness. That brings us to the last section of this tutorial - Rank-Abundance plots.
 
+<a name="section7"></a>
 # A bit more complex visualisation - Rank-Abundance diagrams
 
 Let's have a look at how we can plot the same data a different way! A common way to visualise community composition is creating Rank-Abundance diagrams. These are similar to SAD graphs as they visualise evenness and commonness/rarity. Species are assigned a **rank** based on abundance, with most abundant ranked 1 and least abundant S (where S is the number of species in the community). Like our diversity indices, rank-abundance requires a knowledge of the **relative abundance** of each species. We then plot relative abundance against rank to visualise the community. This way, we will get rid of the annoying gaps present in the previous graphs, and are able to visualise richness as well as evenness!.
@@ -425,7 +421,7 @@ Let's save our plot:
 ggsave(rank_abundance_plots, file = "background/rank_abundance.png", width = 6, height = 6) 
 # add your own filepath
 ```
-
+<a name="section8"></a>
 # Summary
 
 Well done for making it this far! There's not much left to do but to summarize what we learnt - and, of course, make the report for the City Council! In this tutorial, we learnt the basics of describing communities in R, including...

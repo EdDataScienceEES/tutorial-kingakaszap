@@ -1,5 +1,9 @@
 # Tutorial Aims:
 
+1. Learn how ecological communities can be described in R
+2. Undestand basic indices such as richness and diversity, and learn how to calculate them in R
+3. Learn the basics of visualising community composition
+
 # Tutorial Steps
 
  #### <a href="#section1"> 1. Introduction</a>
@@ -19,12 +23,14 @@
 <a name="section1"></a>
 # Introduction
 
-This tutorial will introduce some basic methods of describing and comparing biological communities using R. It builds on some methods and concepts used in community ecology, but if you've never done community ecology before, that's also fine! The concepts used are relatively simple, and will be explained in detail in the tutorial. The tutorial is aimed at beginners, but expects you to have downloaded RStudio and are somewhat familiar with its layout. If you are completely new to R and RStudio, check out this tutorial! (Insert coding club reference) We will also be making plots to visualise our data with ggplot. The terminology used when plotting with ggplot takes practice to grasp, and since it is not the main focus of this tutorial, it is not explained in detail. So don't worry if that bit is slightly confusing! If you're interested in data visualisation, check out [this](insert%20link) coding club tutorial.
+This tutorial will introduce some basic methods of describing and comparing biological communities using R. It builds on some methods and concepts used in community ecology, but if you've never done community ecology before, that's also fine! The concepts used are relatively simple, and will be explained in detail in the tutorial. The tutorial is aimed at beginners, but expects you to have downloaded RStudio and are somewhat familiar with its layout. If you are completely new to R and RStudio, check out this tutorial! (Insert coding club reference) We will also be making plots to visualise our data with ggplot. The terminology used when plotting with ggplot takes practice to grasp, and since it is not the main focus of this tutorial, it is not explained in detail. So don't worry if that bit is slightly confusing! If you're interested in data visualisation, check out [this](https://ourcodingclub.github.io/tutorials/datavis/) coding club tutorial.
 
 All the material you need to complete this tutorial can be found in [this repository](link%20to%20repo). Click on `Code/ Download ZIP` and unzip the folder, or clone the repository to your own GitHub account.
 
 <a name="section2"></a>
 # Setting the scene
+![irina-iriser-2Y4dE8sdhlc-unsplash](https://user-images.githubusercontent.com/114161055/205040811-c8287fc2-2730-491f-94f1-7935a9ac327f.jpg)
+*Photo by Irina Iriser on Unsplash*
 
 Have you ever wondered how communities occupying different habitats (or micro-habitats) vary? Or whether habitat types vary in the number of species they accomodate? For example, how your backyard might differ from the nearby forest?
 
@@ -50,6 +56,12 @@ But then what?
 What values do you report to the council when describing each park? How do you make comparisons between the habitats they provide?
 
 Let's begin...
+
+Here is a picture I took at Blackford Pond when conducting a very similar project:
+<p align="center">
+<img src="https://user-images.githubusercontent.com/114161055/205041839-6050f8fb-c133-405f-b917-482378c53631.jpg" alt="image" height="480"/></p>
+
+
 
 <a name="section3"></a>
 # Importing and tidying field data
@@ -432,5 +444,19 @@ Well done for making it this far! There's not much left to do but to summarize w
 - How to make a SAD diagram, and the drawbacks of using this graph with a small sample size
 - How to visualise community composition with rank-abundance diagrams, and how to infer them.
 
+
+#
+
+#### Check out our <a href="https://ourcodingclub.github.io/links/" target="_blank">Useful links</a> page where you can find loads of guides and cheatsheets.
+
+#### If you have any questions or comments about this tutorial, please contact me on s2024589@ed.ac.uk
+
+<ul class="social-icons">
+	<li>
+		<h3>
+			<a href="https://twitter.com/our_codingclub" target="_blank">&nbsp;Follow our coding adventures on Twitter! <i class="fa fa-twitter"></i></a>
+		</h3>
+	</li>
+</ul>
 
 

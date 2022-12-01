@@ -1,5 +1,4 @@
 
-
 #Part 1 - importing data& title----
 
 #Describing communities
@@ -32,8 +31,6 @@ parks_tidy<- parks %>% gather(species, abundance, c(2:21)) %>%
   #removing NA-s
 
 View (parks_tidy)
-glimpse(parks_tidy)
-
 
 #part 3 - species richness----
 
@@ -43,11 +40,6 @@ glimpse(parks_tidy)
   group_by(site) %>% 
   summarise(sp.richness =length(unique(species)))
  )
-View(richness)
-
-parks_tidy%>% 
-    group_by(site) %>% 
-    summarise(sp.richness =length(unique(species)))
 
 
 #visualising
@@ -69,9 +61,8 @@ parks_tidy%>%
      axis.text.x = element_text(angle=45, hjust=1)))
     #tilting the text of the x axis
 
-ggsave(barplot_richness, file="plots/barplot_richness.png", width= 6, height=6)
+ggsave(barplot_richness, file="tutorial/richnessplot.png", width= 6, height=6)
 #save our plot - don't forget to enter your own filepath!
-
 
 
 #rank- abundance curves FAILED ATTEMPT WITH VEGAN----
@@ -119,29 +110,11 @@ parks_tidy %>%
   summarise(simpsons.dominance =sum(relative.abundance^2)) %>% 
   ungroup()
 
-parks_tidy %>% 
-  group_by(site) %>% 
-  summarise(simpsons.dominance = sum((abundance/sum(abundance))^2)) %>% 
-  ungroup ()
-
 #shannons index
 parks_tidy %>% 
   group_by(site) %>% 
   summarise(shannons.diversity = -sum(relative.abundance*log(relative.abundance))) %>% 
   ungroup()
-
-
-#All indices in one table
-summary<-parks_tidy %>% 
-  group_by(site) %>% 
-  summarise(simpsons_dominance = sum((abundance/sum(abundance))^2), 
-            sp.richness =length(unique(species)),
-            simpsons.diversity = (1-simpsons_dominance),
-            simpsons_reciprocal = (1/simpsons_dominance),
-            shannons_div = -(sum((abundance/sum(abundance))*log(sum((abundance/sum(abundance))))))) %>% 
-  ungroup()
-
-View(summary)
 
 #new indices in one table
 
@@ -189,6 +162,7 @@ labs(x= "\nNumber of individuals", y= "Number of species\n")+
 
 ggsave(sad, file="plots/sad.png", width= 6, height=6)
 
+#with different scales for parks - this looks bad so won't use
 (sad <- parks_frequency %>%                            
     ggplot(aes(x = abundance, y=frequency.of.abundance, fill=site)) +
     geom_bar(stat="identity") +
@@ -204,15 +178,8 @@ ggsave(sad, file="plots/sad.png", width= 6, height=6)
           #removing the legend as the axes provide enough information 
           axis.text = element_text(size = 12), 
           axis.title = element_text(size = 16)))
-#increasing font size
-
-       
-
-#what is wrong with my graph now
 
 ### Trying to make rank abundance graphs for my parks ----
-
-View(parks_tidy)
 
 #We need: relative abundance (y axis) and Rank (x axis.)
 
@@ -223,6 +190,8 @@ parks_rankabundance <- parks_tidy %>%
   mutate(rel.abund.percent = relative.abundance*100,
          rank= (rank(- abundance, ties.method="random"))) %>% 
   ungroup()
+
+View(parks_rankabundance)
 
 (rank_abundance_plots<- parks_rankabundance %>% 
   ggplot(aes(x=rank, y=rel.abund.percent))+
